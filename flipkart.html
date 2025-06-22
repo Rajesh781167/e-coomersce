@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flipkart Profit Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #eef1f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    .calculator { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.15); width: 100%; max-width: 400px; }
+    h2 { text-align: center; color: #333; text-transform: capitalize; }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    input { width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 15px; }
+    button { width: 100%; padding: 12px; background: #007BFF; color: white; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+    button:hover { background: #0056b3; }
+    .result { margin-top: 20px; font-weight: bold; font-size: 16px; white-space: pre-line; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h2>Flipkart Profit Calculator</h2>
+
+    <label>Product Cost (₹):</label>
+    <input type="number" id="cost" placeholder="Enter product cost" />
+
+    <label>Selling Price (₹):</label>
+    <input type="number" id="selling" placeholder="Enter selling price" />
+
+    <label>GST (%)</label>
+    <input type="number" id="gst" placeholder="e.g., 18" />
+
+    <label>TDS (%)</label>
+    <input type="number" id="tds" placeholder="e.g., 1 or 2" />
+
+    <label>Return Rate (%)</label>
+    <input type="number" id="returnRate" placeholder="e.g., 10" />
+
+    <label>Shipping Charge (₹):</label>
+    <input type="number" id="shipping" placeholder="Enter shipping charge" />
+
+    <button onclick="calculateProfit()">Calculate Actual Profit</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculateProfit() {
+      const cost = parseFloat(document.getElementById('cost').value) || 0;
+      const selling = parseFloat(document.getElementById('selling').value) || 0;
+      const gst = parseFloat(document.getElementById('gst').value) || 0;
+      const tds = parseFloat(document.getElementById('tds').value) || 0;
+      const returnRate = parseFloat(document.getElementById('returnRate').value) || 0;
+      const shipping = parseFloat(document.getElementById('shipping').value) || 0;
+
+      if (!cost || !selling) {
+        document.getElementById('result').innerText = "⚠️ Please fill product cost and selling price.";
+        return;
+      }
+
+      const gstAmount = selling * (gst / 100);
+      const tdsAmount = selling * (tds / 100);
+      const returnLoss = (selling - cost) * (returnRate / 100);
+
+      const profit = selling - cost - gstAmount - tdsAmount - returnLoss - shipping;
+
+      let resultText = `
+🔹 GST Amount: ₹${gstAmount.toFixed(2)}
+🔹 TDS Deducted: ₹${tdsAmount.toFixed(2)}
+🔹 Estimated Return Loss: ₹${returnLoss.toFixed(2)}
+🔹 Shipping Charge: ₹${shipping.toFixed(2)}
+`;
+
+      if (profit >= 0) {
+        resultText += `
+✅ Actual Profit: ₹${profit.toFixed(2)}`;
+      } else {
+        resultText += `
+❌ Loss: ₹${Math.abs(profit).toFixed(2)}`;
+      }
+
+      document.getElementById('result').innerText = resultText;
+    }
+  </script>
+</body>
+</html>
